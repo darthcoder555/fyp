@@ -1,0 +1,33 @@
+07-01-2017
+Following instructions on this page - https://www.digitalocean.com/community/tutorials/how-to-install-linux-apache-mysql-php-lamp-stack-on-debian
+INSTALLING LAMP
+apt-get update
+apt-get install apache2
+apt-get install mysql-server
+mysql_secure_insallation (yes for everything)
+apt-get install php5 php-pear php5-mysql
+service apache2 restart
+nano /var/www/info.php
+added  "<?php
+phpinfo();
+?>"
+cp /var/www/info.php /var/www/html/info.php
+rm /var/www/info.php
+
+tar xvfz Downloads/mediawiki-1.28.0.tar.gz 
+mkdir /var/www/html/fyp
+mv mediawiki-1.28.0/* /var/www/html/fyp
+
+INSTALLED MEDIAWIKI
+
+UPLOADING DATABASE
+
+time mysql -u root -p fyp < enwiki-20161201-category.sql (took 30s, 75mb file, 1532985 rows)
+time mysql -u root -p fyp < enwiki-20161201-imagelinks.sql(3.5gb file, took 64 min, 83965355 rows)
+time sed 's/\=InnoDB/\=MyISAM/' enwiki-20161201-categorylinks.sql | mysql -u root -p fyp (16 gb file, took 128 min, 108182439 rows)
+time zcat fyp-datadumps/enwiki-20161201-image.sql.gz | sed 's/\=InnoDB/\=MyISAM/' | mysql -u root -p fyp ( 125 mb zipped file, 49s, 895747 rows)
+time zcat fyp-datadumps/enwiki-20161201-page_props.sql.gz | sed 's/\=InnoDB/\=MyISAM/' | mysql -u root -p fyp (220 mb zipped, 18 min, 24864327 rows)
+time zcat fyp-datadumps/enwiki-20161201-page.sql.gz | sed 's/\=InnoDB/\=MyISAM/' | mysql -u root -p fyp ( 1.4gb zipped, 35min, 40966811 rows)
+
+apt-get install python-mysqldb
+
