@@ -27,7 +27,7 @@ def children(node):
 	query_result = cur.fetchall()
 	for i in query_result:
 		page_id = i[0]
-		query = "SELECT page_title FROM page WHERE page_namespace=14 AND page_id=" + str(page_id) + ";"
+		query = "SELECT page_title FROM page WHERE page_id=" + str(page_id) + ";"
 		cur.execute(query)
 		page_title = cur.fetchone()[0]
 		result = result + [page_title]
@@ -40,9 +40,10 @@ def articles(node):
 	query_result = cur.fetchall()
 	for i in query_result:
 		page_id = i[0]
-		query = "SELECT page_title FROM page WHERE page_namespace=0 AND page_id=" + str(page_id) + ";"
+		query = "SELECT page_title FROM page WHERE page_id=" + str(page_id) + ";"
 		cur.execute(query)
 		page_title = cur.fetchone()[0]
+		print page_title
 		result = result + [page_title]
 	return(result)
 
@@ -70,12 +71,32 @@ def k_level_nodes (cur_node, k):
 		
 	return visited
 
+def subcats_limit(node, limit):
+	result = []
+	query = "SELECT cat_subcats FROM category WHERE cat_title LIKE '" + node + "';"
+	cur.execute(query)
+	cat_subcats = cur.fetchone()[0]
+	if(cat_subcats <= limit):
+		return True
+	else:
+		return False
 
+def pages_limit(node, limit):
+	result = []
+	query = "SELECT cat_pages FROM category WHERE cat_title LIKE '" + node + "';"
+	cur.execute(query)
+	cat_pages = cur.fetchone()[0]
+	if(cat_pages <= limit):
+		return True
+	else:
+		return False
 
-
-
-
-
-
-	
-
+def cats_limit(node, subcat_limit, page_limit):
+	result = []
+	query = "SELECT cat_subcats, cat_pages FROM category WHERE cat_title LIKE '" + node + "';"
+	cur.execute(query)
+	cat_subcats, cat_pages = cur.fetchone()
+	if(cat_subcats <= subcat_limit and cat_pages <= page_limit):
+		return True
+	else:
+		return False
